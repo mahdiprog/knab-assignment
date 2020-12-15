@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoRate.Application", "CryptoRate.Application\CryptoRate.Application.csproj", "{0F2AB44E-7CB7-42BD-9A45-D77FE35709D4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoRate.Domain", "CryptoRate.Domain\CryptoRate.Domain.csproj", "{E8B1C285-99A9-47BF-8C73-32023ED6B476}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoRate.Application.UnitTests", "CryptoRate.Application.UnitTests\CryptoRate.Application.UnitTests.csproj", "{61619CF7-E932-4555-BDF5-C10E379E5E74}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoRate.IntegrationTests", "CryptoRate.IntegrationTests\CryptoRate.IntegrationTests.csproj", "{1C81BCCD-F041-4179-AAD7-9EEF484AD44C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoRate.Web", "CryptoRate.Web\CryptoRate.Web.csproj", "{74480AAB-4880-4A7B-A6DD-3A83CFF9A63A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0F2AB44E-7CB7-42BD-9A45-D77FE35709D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F2AB44E-7CB7-42BD-9A45-D77FE35709D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F2AB44E-7CB7-42BD-9A45-D77FE35709D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F2AB44E-7CB7-42BD-9A45-D77FE35709D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8B1C285-99A9-47BF-8C73-32023ED6B476}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8B1C285-99A9-47BF-8C73-32023ED6B476}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8B1C285-99A9-47BF-8C73-32023ED6B476}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8B1C285-99A9-47BF-8C73-32023ED6B476}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61619CF7-E932-4555-BDF5-C10E379E5E74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61619CF7-E932-4555-BDF5-C10E379E5E74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61619CF7-E932-4555-BDF5-C10E379E5E74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61619CF7-E932-4555-BDF5-C10E379E5E74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C81BCCD-F041-4179-AAD7-9EEF484AD44C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C81BCCD-F041-4179-AAD7-9EEF484AD44C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C81BCCD-F041-4179-AAD7-9EEF484AD44C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C81BCCD-F041-4179-AAD7-9EEF484AD44C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74480AAB-4880-4A7B-A6DD-3A83CFF9A63A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74480AAB-4880-4A7B-A6DD-3A83CFF9A63A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74480AAB-4880-4A7B-A6DD-3A83CFF9A63A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74480AAB-4880-4A7B-A6DD-3A83CFF9A63A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {18AE4AC6-54E7-4B9D-932A-4CA7A7490E40}
+	EndGlobalSection
+EndGlobal
