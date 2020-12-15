@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text.Json;
 using System.Threading.Tasks;
 using CryptoRate.Application.Interfaces;
 using CryptoRate.Application.ViewModels;
-using CryptoRate.Domain.Interfaces;
 using CryptoRate.Domain.Models;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace CryptoRate.Application.Services
 {
@@ -17,44 +17,73 @@ namespace CryptoRate.Application.Services
     {
         private readonly HttpClient _httpClient;
         private readonly IMemoryCache _cache;
-        private readonly string _remoteServiceBaseUrl;
-        private readonly TimeSpan _slidingExpiration = TimeSpan.FromSeconds(2);
+        private readonly TimeSpan _slidingExpiration;
+        private readonly ILogger<CryptoCurrencyService> _logger;
+        private const string PriceCacheKey = "{0}-Price";
 
-        public CryptoCurrencyService(HttpClient httpClient, IMemoryCache cache)
+        public CryptoCurrencyService(HttpClient httpClient, IMemoryCache cache, IConfiguration configuration,
+            ILogger<CryptoCurrencyService> logger)
         {
             _httpClient = httpClient;
             _cache = cache;
-            _httpClient.DefaultRequestHeaders.Add("X-CMC_PRO_API_KEY", "dbf60d2e-709f-4590-9b99-4537e30f962c");
+            _logger = logger;
+            _slidingExpiration = TimeSpan.Parse(configuration["CoinMarketCap:CacheTimeout"]);
         }
 
-        public async Task<IEnumerable<CryptoCurrencyPseudo>> FetchLatestQuoteAndSetCache(params string[] symbols)
+        public async Task<IEnumerable<CryptoCurrencyWithPrice>> FetchLatestQuoteAndSetCache(params string[] symbols)
         {
             var quotes = (await RequestLatestQuotes(symbols)).ToList();
             foreach (var quote in quotes)
             {
-                _cache.Set($"{quote.Symbol}-Price", quote.Quote.Usd.Price, new MemoryCacheEntryOptions{SlidingExpiration = _slidingExpiration});
+                _cache.Set(string.Format(PriceCacheKey, quote.Symbol), quote.Quote.Usd.Price,
+                    new MemoryCacheEntryOptions {SlidingExpiration = _slidingExpiration});
             }
             // Save data in cache.
-           
+
             return quotes;
         }
 
-        private async Task<IEnumerable<CryptoCurrencyPseudo>> RequestLatestQuotes(params string[] symbols)
+        private async Task<IEnumerable<CryptoCurrencyWithPrice>> RequestLatestQuotes(params string[] symbols)
         {
-            var jsonStream =
-                await _httpClient.GetStreamAsync(
-                    $"https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?aux=is_active&symbol={string.Join(",",symbols)}").ConfigureAwait(false);
-            var coinInfo = await CoinMarketCapResponse<CryptoCurrencyPseudo>.FromJson(jsonStream).ConfigureAwait(false);
-            return coinInfo.Data;
-        }
-        private async Task<CryptoCurrencyPseudo> RequestLatestQuote(string symbol)
-        {
-            return (await RequestLatestQuotes(symbol)).FirstOrDefault();
+            try
+            {
+                var jsonStream =
+                    await _httpClient.GetStreamAsync(
+                            $"/v1/cryptocurrency/quotes/latest?aux=is_active&symbol={string.Join(",", symbols)}")
+                        .ConfigureAwait(false);
+                var coinInfo = await CoinMarketCapResponse<CryptoCurrencyWithPrice>.FromJson(jsonStream)
+                    .ConfigureAwait(false);
+                if (coinInfo == null)
+                {
+                    _logger.LogError("Empty response on getting quotes from MarketCoinCap");
+                    return null;
+                }
+
+                if (coinInfo.Status.ErrorCode != 0)
+                {
+                    _logger.LogError(coinInfo.Status.ErrorMessage);
+                    return null;
+                }
+
+                return coinInfo.Data;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error on getting quotes from MarketCoinCap");
+            }
+
+            return null;
         }
 
-        public async Task<CryptoCurrencyPseudo> GetLatestQuote(string symbol)
+        private async Task<decimal> RequestLatestQuote(string symbol)
         {
-            var cacheKey = $"{symbol}-Price";
+            var quote = (await RequestLatestQuotes(symbol)).FirstOrDefault();
+            return quote.Quote.Usd.Price;
+        }
+
+        public async Task<decimal> GetLatestPrice(string symbol)
+        {
+            var cacheKey = string.Format(PriceCacheKey, symbol);
             var quote = await _cache.GetOrCreateAsync(cacheKey,
                 cacheEntry =>
                 {
@@ -76,13 +105,34 @@ namespace CryptoRate.Application.Services
                 }).ConfigureAwait(false);
             return quote;
         }
+
         private async Task<IEnumerable<CryptoCurrency>> RequestAllCurrencies()
         {
+            try
+            {
+                var response =
+                    await _httpClient.GetFromJsonAsync<CoinMarketCapResponse<CryptoCurrency>>(
+                        "/v1/cryptocurrency/map?limit=20&aux=").ConfigureAwait(false);
+                if (response == null)
+                {
+                    _logger.LogError("Empty response on getting currency maps from MarketCoinCap");
+                    return null;
+                }
 
-            var response = 
-                await _httpClient.GetFromJsonAsync<CoinMarketCapResponse<CryptoCurrency>>(
-                    $"https://pro-api.coinmarketcap.com/v1/cryptocurrency/map?limit=20&aux=").ConfigureAwait(false);
-            return response.Data;
+                if (response.Status.ErrorCode != 0)
+                {
+                    _logger.LogError(response.Status.ErrorMessage);
+                    return null;
+                }
+
+                return response.Data;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error on getting currency maps from MarketCoinCap");
+            }
+
+            return null;
         }
     }
 }

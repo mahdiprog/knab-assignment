@@ -4,7 +4,7 @@ using CryptoRate.Domain.Interfaces;
 
 namespace CryptoRate.Application.ViewModels
 {
-    public  class CryptoCurrencyPseudo : ICryptoCurrency
+    public  class CryptoCurrencyWithPrice : ICryptoCurrency
     {
         [JsonPropertyName("id")]
         public int Id { get; set; }

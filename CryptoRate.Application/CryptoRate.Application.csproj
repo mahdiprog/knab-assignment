@@ -20,9 +20,4 @@
     <ProjectReference Include="..\CryptoRate.Domain\CryptoRate.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="CryptoCurrencies\" />
-    <Folder Include="Currencies\" />
-  </ItemGroup>
-
 </Project>

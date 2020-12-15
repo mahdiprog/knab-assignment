@@ -1,10 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using CryptoRate.Application.ViewModels;
 
 namespace CryptoRate.Application.Interfaces
 {
     public interface IExchangeRateService
     {
-        Task<ExchangeRatePseudo> GetLatestRate(string baseCurrencySymbol = "USD");
+        Task<ExchangeRate> GetLatestRate(string symbols, string baseCurrencySymbol = "USD");
     }
 }

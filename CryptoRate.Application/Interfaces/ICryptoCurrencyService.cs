@@ -8,8 +8,8 @@ namespace CryptoRate.Application.Interfaces
 {
     public interface ICryptoCurrencyService
     {
-        Task<IEnumerable<CryptoCurrencyPseudo>> FetchLatestQuoteAndSetCache(params string[] symbols);
-        Task<CryptoCurrencyPseudo> GetLatestQuote(string symbol);
+        Task<IEnumerable<CryptoCurrencyWithPrice>> FetchLatestQuoteAndSetCache(params string[] symbols);
+        Task<decimal> GetLatestPrice(string symbol);
         Task<IEnumerable<CryptoCurrency>> GetAllCurrencies();
     }
 }

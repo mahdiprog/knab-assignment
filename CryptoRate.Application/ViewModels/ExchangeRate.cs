@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace CryptoRate.Application.ViewModels
 {
-    public class ExchangeRatePseudo
+    public class ExchangeRate
     {
         [JsonPropertyName("base")]
         public string Base { get; set; }
