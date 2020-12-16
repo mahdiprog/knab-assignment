@@ -25,7 +25,12 @@ namespace CryptoRate.Application.Services
             _logger = logger;
             _slidingExpiration = TimeSpan.Parse(configuration["ExchangeRateApi:CacheTimeout"]);
         }
-
+        /// <summary>
+        /// Get exchange rate from the API and cache it
+        /// </summary>
+        /// <param name="symbols">currency symbols comma separated</param>
+        /// <param name="baseCurrencySymbol">base currency that others will be compared to</param>
+        /// <returns></returns>
         public async Task<ExchangeRate> GetLatestRate(string symbols, string baseCurrencySymbol = "USD")
         {
             var cacheKey = "ExchangeRates";
@@ -50,9 +55,8 @@ namespace CryptoRate.Application.Services
             catch (Exception e)
             {
                 _logger.LogError(e, "Error on getting rates from ExchangeRateApi");
+                throw;
             }
-
-            return null;
         }
 
     }

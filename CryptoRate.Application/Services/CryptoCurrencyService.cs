@@ -29,20 +29,29 @@ namespace CryptoRate.Application.Services
             _logger = logger;
             _slidingExpiration = TimeSpan.Parse(configuration["CoinMarketCap:CacheTimeout"]);
         }
-
+        /// <summary>
+        /// Send request to the API and save result in cache
+        /// </summary>
+        /// <param name="symbols">crypto currency symbols</param>
+        /// <returns>List all requested crypto currencies with their prices</returns>
         public async Task<IEnumerable<CryptoCurrencyWithPrice>> FetchLatestQuoteAndSetCache(params string[] symbols)
         {
             var quotes = (await RequestLatestQuotes(symbols)).ToList();
+            
+            // Save data in cache.
             foreach (var quote in quotes)
             {
                 _cache.Set(string.Format(PriceCacheKey, quote.Symbol), quote.Quote.Usd.Price,
                     new MemoryCacheEntryOptions {SlidingExpiration = _slidingExpiration});
             }
-            // Save data in cache.
 
             return quotes;
         }
-
+        /// <summary>
+        /// Read Crypto currency data and price from th API
+        /// </summary>
+        /// <param name="symbols"></param>
+        /// <returns></returns>
         private async Task<IEnumerable<CryptoCurrencyWithPrice>> RequestLatestQuotes(params string[] symbols)
         {
             try
@@ -80,7 +89,11 @@ namespace CryptoRate.Application.Services
             var quote = (await RequestLatestQuotes(symbol)).FirstOrDefault();
             return quote.Quote.Usd.Price;
         }
-
+        /// <summary>
+        /// Gets the latest price of specified symbol 
+        /// </summary>
+        /// <param name="symbol">crypto currency symbol</param>
+        /// <returns>price</returns>
         public async Task<decimal> GetLatestPrice(string symbol)
         {
             var cacheKey = string.Format(PriceCacheKey, symbol);
@@ -92,7 +105,10 @@ namespace CryptoRate.Application.Services
                 }).ConfigureAwait(false);
             return quote;
         }
-
+        /// <summary>
+        /// get all crypto currency data (sampled 20) and cache it
+        /// </summary>
+        /// <returns>list of CryptoCurrency </returns>
         public async Task<IEnumerable<CryptoCurrency>> GetAllCurrencies()
         {
             var cacheKey = "symbols";

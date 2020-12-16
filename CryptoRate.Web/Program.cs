@@ -20,6 +20,11 @@ namespace CryptoRate.Web
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.ConfigureKestrel(serverOptions =>
+                    {
+                        // remove server header for security reasons
+                        serverOptions.AddServerHeader = false;
+                    });
                     webBuilder.UseStartup<Startup>();
                 });
     }
