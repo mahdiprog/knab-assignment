@@ -2,7 +2,7 @@
 
  1.  How long did you spend on the coding assignment? What would you add to your solution if you had more time? If you didn't spend much time on the coding assignment then use this as an opportunity to explain what you would add.
  
-> I've spent about a day. I had enought time but if I would want to make it more complete, I would add more tests
+> I've spent about a day. I had enought time but if I would want to make it more complete, I would add more tests and add Polly for proper retrying logic
 
  2. What was the most useful feature that was added to the latest version of your language of choice? Please include a snippet of code that shows how you've used it.
  > I think interface defaultimplementationis quite usefull
